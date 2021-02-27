@@ -23,5 +23,7 @@
                 "Paguelofacil/Gateway"
             ]
         ]
-    }
+    },
+    "minimum-stability": "alpha",
+    "prefer-stable": true
 }
