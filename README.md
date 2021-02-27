@@ -9,7 +9,7 @@ Usted podrá procesar pagos a través de PagueloFacil.
 
 Para obtener más información visite el siguiente enlace [here](https://developers.paguelofacil.com/ecommerce/magento).
 
-Other notes on extension: https://github.com/paguelofacil/magento
+Other notes on extension: https://github.com/rolmos1990/magento2
 
 Install
 =======
