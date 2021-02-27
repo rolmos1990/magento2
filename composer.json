@@ -35,5 +35,6 @@
         "payment-gateway",
         "paguelofacil"
     ],
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
