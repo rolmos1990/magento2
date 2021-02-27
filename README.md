@@ -19,7 +19,7 @@ Install
 2. Ingrese alguno de los comandos para instalar el modulo.
 
     ```bash
-    composer require Paguelofacil/magento
+    composer require paguelofacil/magento2
     ```
 Esperar mientras las dependencias se actualizan.
 
