@@ -9,12 +9,15 @@
             "role": "Paguelofacil Developer"
         }
     ],
+    "support": {
+        "email": "info@paguelofacil.com"
+    },
     "version": "dev-master",
     "license": [
         "OSL-3.0"
     ],
     "require": {
-
+        "php": "~7.1.3|~7.2.0|~7.3.0|~7.4.0"
     },
     "extra": {
         "map": [
@@ -24,6 +27,14 @@
             ]
         ]
     },
+    "keywords": [
+        "magento",
+        "magento2",
+        "payment",
+        "php",
+        "payment-gateway",
+        "paguelofacil"
+    ],
     "minimum-stability": "alpha",
     "prefer-stable": true
 }
