@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Paguelofacil_Gateway
+*
+* @category    Paguelofacil
+* @package     Paguelofacil_Gateway
+* @copyright   Paguelofacil (http://paguelofacil.com)
+*/
+-->
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
+    <groups>
+        <group id="paguelofacil">
+            <label>Paguelofacil Methods</label>
+        </group>
+    </groups>
+    <methods>
+        <method name="paguelofacil_gateway">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="paguelofacil_offsite">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+    </methods>
+</payment>

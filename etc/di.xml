@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2021 PagueloFacil. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Payment Method Facade configuration -->
+    <virtualType name="PagueloFacilFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Paguelofacil\Gateway\Model\Ui\ConfigProvider::CODE_ONSITE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Paguelofacil\Gateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PagueloFacilValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">PagueloFacilCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Configuration reader -->
+    <virtualType name="PagueloFacilConfig" type="Paguelofacil\Gateway\Gateway\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Paguelofacil\Gateway\Model\Ui\ConfigProvider::CODE_ONSITE</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Logger, initialized with PagueloFacilConfig -->
+    <virtualType name="PagueloFacilLogger" type="Magento\Payment\Model\Method\Logger">
+        <arguments>
+            <argument name="config" xsi:type="object">PagueloFacilConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Paguelofacil\Gateway\Gateway\Http\Client\AuthRestProcessTx">
+        <arguments>
+            <argument name="logger" xsi:type="object">PagueloFacilLogger</argument>
+            <argument name="httpRequest" xsi:type="object">Paguelofacil\Gateway\Utils\PaguelofacilServices</argument>
+        </arguments>
+    </type>
+
+    <type name="Paguelofacil\Gateway\Gateway\Http\Client\CaptureRestProcessTx">
+        <arguments>
+            <argument name="logger" xsi:type="object">PagueloFacilLogger</argument>
+            <argument name="httpRequest" xsi:type="object">Paguelofacil\Gateway\Utils\PaguelofacilServices</argument>
+        </arguments>
+    </type>
+
+    <type name="Paguelofacil\Gateway\Gateway\Http\Client\OrderRestProcessTx">
+        <arguments>
+            <argument name="logger" xsi:type="object">PagueloFacilLogger</argument>
+            <argument name="httpRequest" xsi:type="object">Paguelofacil\Gateway\Utils\PaguelofacilServices</argument>
+        </arguments>
+    </type>
+
+    <type name="Paguelofacil\Gateway\Gateway\Http\Client\RefundRestProcessTx">
+        <arguments>
+            <argument name="logger" xsi:type="object">PagueloFacilLogger</argument>
+            <argument name="httpRequest" xsi:type="object">Paguelofacil\Gateway\Utils\PaguelofacilServices</argument>
+        </arguments>
+    </type>
+
+    <type name="Paguelofacil\Gateway\Gateway\Http\Client\VoidRestProcessTx">
+        <arguments>
+            <argument name="logger" xsi:type="object">PagueloFacilLogger</argument>
+            <argument name="httpRequest" xsi:type="object">Paguelofacil\Gateway\Utils\PaguelofacilServices</argument>
+        </arguments>
+    </type>
+
+    <!-- Authorize command -->
+    <virtualType name="PaguelofacilAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">PagueloFacilAuthorizationRequest</argument>
+            <argument name="handler" xsi:type="object">PagueloFacilOpenResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">Paguelofacil\Gateway\Gateway\Http\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">Paguelofacil\Gateway\Gateway\Validator\ResponseCodeValidator</argument>
+            <argument name="client" xsi:type="object">Paguelofacil\Gateway\Gateway\Http\Client\AuthRestProcessTx</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorization Request -->
+    <virtualType name="PagueloFacilAuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="transaction" xsi:type="string">Paguelofacil\Gateway\Gateway\Request\AuthorizationRequest</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Paguelofacil\Gateway\Gateway\Request\AuthorizationRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">PagueloFacilConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Capture command -->
+    <virtualType name="PaguelofacilCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">PagueloFacilCaptureRequest</argument>
+            <argument name="handler" xsi:type="object">PagueloFacilOpenResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">Paguelofacil\Gateway\Gateway\Http\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">Paguelofacil\Gateway\Gateway\Validator\ResponseCodeValidator</argument>
+            <argument name="client" xsi:type="object">Paguelofacil\Gateway\Gateway\Http\Client\CaptureRestProcessTx</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorization Request -->
+    <virtualType name="PagueloFacilCaptureRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="transaction" xsi:type="string">Paguelofacil\Gateway\Gateway\Request\CaptureRequest</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Paguelofacil\Gateway\Gateway\Request\CaptureRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">PagueloFacilConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Void command -->
+    <virtualType name="PaguelofacilVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Paguelofacil\Gateway\Gateway\Request\VoidRequest</argument>
+            <argument name="handler" xsi:type="object">PagueloFacilCloseResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">Paguelofacil\Gateway\Gateway\Http\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">Paguelofacil\Gateway\Gateway\Validator\ResponseCodeValidator</argument>
+            <argument name="client" xsi:type="object">Paguelofacil\Gateway\Gateway\Http\Client\VoidRestProcessTx</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Void Request -->
+    <type name="Paguelofacil\Gateway\Gateway\Request\VoidRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">PagueloFacilConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Refund command -->
+    <virtualType name="PaguelofacilRefundCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Paguelofacil\Gateway\Gateway\Request\RefundRequest</argument>
+            <argument name="handler" xsi:type="object">PagueloFacilCloseResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">Paguelofacil\Gateway\Gateway\Http\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">Paguelofacil\Gateway\Gateway\Validator\ResponseCodeValidator</argument>
+            <argument name="client" xsi:type="object">Paguelofacil\Gateway\Gateway\Http\Client\RefundRestProcessTx</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Refund Request -->
+    <type name="Paguelofacil\Gateway\Gateway\Request\RefundRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">PagueloFacilConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Authorization&Capture command  -->
+    <virtualType name="PaguelofacilSaleCommand" type="PaguelofacilAuthorizeCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">PaguelofacilSaleRequest</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PaguelofacilSaleRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="transaction" xsi:type="string">Paguelofacil\Gateway\Gateway\Request\SaleRequest</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Sale Request -->
+    <type name="Paguelofacil\Gateway\Gateway\Request\SaleRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">PagueloFacilConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Strategy for Authorize&Capture -->
+    <virtualType name="PagueloFacilCaptureStrategyCommand" type="Paguelofacil\Gateway\Gateway\Command\CaptureStrategyCommand">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">PagueloFacilCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Commands infrastructure -->
+    <virtualType name="PagueloFacilCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="authorize" xsi:type="string">PaguelofacilAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">PagueloFacilCaptureStrategyCommand</item>
+                <item name="settlement" xsi:type="string">PaguelofacilCaptureCommand</item>
+                <item name="sale" xsi:type="string">PaguelofacilSaleCommand</item>
+                <item name="void" xsi:type="string">PaguelofacilVoidCommand</item>
+                <item name="refund" xsi:type="string">PaguelofacilRefundCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Response Open handlers -->
+    <virtualType name="PagueloFacilOpenResponseHandlerComposite" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="txnid" xsi:type="string">Paguelofacil\Gateway\Gateway\Response\OpenHandlerResponse</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Response Close handlers -->
+    <virtualType name="PagueloFacilCloseResponseHandlerComposite" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="txnid" xsi:type="string">Paguelofacil\Gateway\Gateway\Response\CloseHandlerResponse</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Value handlers infrastructure -->
+    <virtualType name="PagueloFacilValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PagueloFacilConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Configuration reader -->
+    <type name="Paguelofacil\Gateway\Gateway\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Paguelofacil\Gateway\Model\Ui\ConfigProvider::CODE_ONSITE</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="PagueloFacilConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">Paguelofacil\Gateway\Gateway\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Paguelofacil\Gateway\Block\Info">
+        <arguments>
+            <argument name="config" xsi:type="object">PagueloFacilConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Payment Method Offsite Facade configuration -->
+<!--    <virtualType name="PagueloFacilOffsite" type="Paguelofacil\Gateway\Model\PaymentFlow">
+        <arguments>
+            <argument name="config" xsi:type="object">PagueloFacilConfig</argument>
+        </arguments>
+    </virtualType>-->
+
+
+</config>

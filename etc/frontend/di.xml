@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Paguelofacil_Gateway
+*
+* @category    Paguelofacil
+* @package     Paguelofacil_Gateway
+* @copyright   Paguelofacil (http://paguelofacil.com)
+*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <virtualType name="Paguelofacil\Gateway\Model\ConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
+        <arguments>
+            <argument name="methodCodes" xsi:type="array">
+                <item name="paguelofacil_gateway" xsi:type="const">Paguelofacil\Gateway\Model\Ui\ConfigProvider::CODE_ONSITE</item>
+                <item name="paguelofacil_offsite" xsi:type="const">Paguelofacil\Gateway\Model\Ui\ConfigProvider::CODE_OFFSITE</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="paguelofacil_gateway_config_provider" xsi:type="object">Paguelofacil\Gateway\Model\ConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Paguelofacil_Gateway
+*
+* @category    Paguelofacil
+* @package     Paguelofacil_Gateway
+* @copyright   Suitepay (http://paguelofacil.com)
+*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="paguelofacil_gateway" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Paguelofacil</label>
+                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Habilitado</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="merchant_cclw" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CCLW for Live</label>
+                </field>
+                <field id="merchant_token" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Access Token for Live</label>
+                </field>
+                <field id="merchant_cclw_sandbox" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CCLW for Sandbox</label>
+                </field>
+                <field id="merchant_token_sandbox" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Access Token API for Sandbox</label>
+                </field>
+                <field id="sandbox" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sandbox</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+				<field id="cctypes" translate="label" type="multiselect" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Credit Card Types</label>
+                    <source_model>Paguelofacil\Gateway\Model\Source\Cctype</source_model>
+                </field>
+                <field id="payment_action" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Payment Action</label>
+                    <source_model>Paguelofacil\Gateway\Model\Adminhtml\Source\PaymentAction</source_model>
+                </field>
+                <field id="order_status" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>New Order Status</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                </field>
+            </group>
+            <group id="paguelofacil_offsite" translate="label" type="text" sortOrder="49" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Paguelofacil (Link Payment)</label>
+                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Habilitado</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="merchant_cclw" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CCLW for Live</label>
+                </field>
+                <field id="merchant_cclw_sandbox" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CCLW for Sandbox</label>
+                </field>
+                <field id="sandbox" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sandbox</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="order_status" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>New Order Status</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
