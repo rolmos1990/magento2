@@ -86,13 +86,15 @@ class Processingtx extends \Magento\Framework\App\Action\Action
     {
         $id = $this->getRequest()->getParam("transactionId");
         $totalPagado = $this->getRequest()->getParam("TotalPagado");
-        $er = $this->getRequest()->getParam("CMTN");
+        $amount = $this->getRequest()->getParam("CMTN");
         $estado = $this->getRequest()->getParam("Estado");
         $razon = $this->getRequest()->getParam("Razon");
+        $operCode = $this->getRequest()->getParam("Oper");
+        $order = $this->getRequest()->getParam("orderId");
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $order_model = $objectManager->get('Magento\Sales\Model\Order');
-        $order = $order_model->load("45");
+        $order = $order_model->load($order);
 
         $method = $order->getPayment()->getMethod();
         $methodInstance = $this->_paymentHelper->getMethodInstance($method);
@@ -116,7 +118,7 @@ class Processingtx extends \Magento\Framework\App\Action\Action
 
         $transaction = $this->transactionBuilder->setPayment($payment)
             ->setOrder($order)
-            ->setTransactionId($payment->getTransactionId())
+            ->setTransactionId($operCode)
             ->build(Transaction::TYPE_CAPTURE);
         $payment->addTransactionCommentsToOrder($transaction, "Paguelofacil Payment Received");
 
