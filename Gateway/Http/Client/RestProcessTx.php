@@ -159,6 +159,7 @@ abstract class RestProcessTx implements ClientInterface
      */
     function processTx(TransferInterface $transfer)
     {
+        $body = $transfer->getBody();
         if($this->getHttpClient() == null){
             throw new \InvalidArgumentException('Curl is required for the petition');
         }
@@ -170,6 +171,10 @@ abstract class RestProcessTx implements ClientInterface
             $this->httpRequest->setService($this->getCurrentService());
             $this->httpRequest->setSandbox($this->getCurrentConfig()->isSandbox());
             $this->httpRequest->setCredentials($this->getTokenApi());
+
+            if($body["METHOD"]){
+                $this->httpRequest->setService($body["METHOD"]);
+            }
 
             $response = $this->httpRequest->processTx($transfer->getBody());
 

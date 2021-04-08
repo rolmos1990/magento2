@@ -27,6 +27,22 @@ class SaleRequest implements BuilderInterface
     }
 
     /**
+     * Validate the enviroment for sandbox or production
+     *
+     * @return void
+     */
+
+    private function validateEnviromentConfig(){
+        $validProduction = $this->config->getValue(Config::KEY_MERCHANT_CCLW) && ($this->config->getValue(Config::KEY_SANDBOX) != Config::BOOLEAN_TRUE);
+        $validSandbox = $this->config->getValue(Config::KEY_MERCHANT_CCLW_SANDBOX) && ($this->config->getValue(Config::KEY_SANDBOX) == Config::BOOLEAN_TRUE);
+
+        if (!$validProduction && !$validSandbox) {
+            $message = "CCLW Prod: ". $this->config->getValue(Config::KEY_MERCHANT_CCLW). "CCLW Sandbox: ".$this->config->getValue(Config::KEY_MERCHANT_CCLW_SANDBOX). ", Mode Sandbox:" .$this->config->getValue(Config::KEY_SANDBOX);
+            throw new \InvalidArgumentException('You must be an merchant cclw valid, Please verify your configuration. - '. $message);
+        }
+    }
+
+    /**
      * Builds ENV request
      *
      * @param array $buildSubject
@@ -45,9 +61,7 @@ class SaleRequest implements BuilderInterface
         $order = $payment->getOrder();
         $address = $order->getBillingAddress();
 
-        if (!$this->config->getValue("merchant_cclw", $order->getStoreId()) || $this->config->getValue("merchant_cclw", $order->getStoreId()) == "") {
-            throw new \InvalidArgumentException('You must be an merchant cclw valid, Please verify your configuration.');
-        }
+        $this->validateEnviromentConfig();
 
         #Credit card Owner
         $ccowner = explode(" ",$payment->getPayment()->getAdditionalInformation(DataAssignObserver::CC_OWNER),2);
@@ -77,7 +91,8 @@ class SaleRequest implements BuilderInterface
                 "firstName" => $name,
                 "lastName" => $lastname,
                 "cardType" => $card_type
-            ]
+            ],
+            "METHOD" => "AUTH_CAPTURE"
         ];
     }
 }
