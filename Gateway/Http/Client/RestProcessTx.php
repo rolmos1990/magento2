@@ -172,7 +172,7 @@ abstract class RestProcessTx implements ClientInterface
             $this->httpRequest->setSandbox($this->getCurrentConfig()->isSandbox());
             $this->httpRequest->setCredentials($this->getTokenApi());
 
-            if($body["METHOD"]){
+            if(isset($body["METHOD"])){
                 $this->httpRequest->setService($body["METHOD"]);
             }
 
