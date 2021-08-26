@@ -142,7 +142,7 @@ class Data extends \Magento\Framework\App\Action\Action
             $this->getResponse()->setRedirect($url);
 
         } catch (\Exception $e) {
-            throw new \InvalidArgumentException('Payment Data invalid');
+            throw new \InvalidArgumentException('Payment Data invalid' . $e->getMessage());
         }
     }
 }
