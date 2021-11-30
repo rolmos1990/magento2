@@ -206,4 +206,14 @@ class Processingtx extends \Magento\Framework\App\Action\Action
             $this->_redirect('checkout/onepage/success');
         }
     }
+       
+    
+    public function ValidateTrxbyAPI($codOper){
+            
+        $clientServices = new PaguelofacilServices();
+        $ValidationsPF = $clientServices->SearchTx($codOper);
+       
+            return $ValidationsPF;
+           
+    }
 }
