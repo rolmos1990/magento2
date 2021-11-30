@@ -15,6 +15,8 @@ class PaguelofacilServices {
     const REVERSE_AUTH                  = "REVERSE_AUTH";
     const REVERSE_CAPTURE               = "REVERSE_CAPTURE";
     const OFFSITE                       = "OFFSITE";
+    const URICORE                       = "PFManagementServices/api/v1/";
+    const TRXVALID                      =  "MerchantTransactions?filter=codOper::";
 
     //Service availables
     const SERVICE_AVAILABLES = [ self::AUTH_SERVICE, self::CAPTURE_SERVICE, self::AUTH_CAPTURE_SERVICE, self::REVERSE_AUTH, self::REVERSE_CAPTURE];
@@ -112,6 +114,41 @@ class PaguelofacilServices {
         return self::PRODUCTION_ENVIROMENT . self::PROCESS_TX . $this->service;
     }
 
+    
+    public function SearchTx($param){
+        
+       /* if(!$this->getCredentials()){
+            throw new \InvalidArgumentException("Paguelofacil ProcessTx - Authorization Token is Required");
+        }*/
+        
+
+        $ch = curl_init($this->getPaymentTrxValid($param));
+        //curl_setopt($ch, CURLOPT_URL, );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+
+            $arresult = json_decode($response, true);
+
+            foreach ($arresult->data as $i => $obj) {
+                $orderPFamount=$obj->amount;
+                $orderPFstatus = $obj->status;
+            }
+
+            $arrDatavalidations =[
+                "status" =>$orderPFstatus,
+                "amount" =>$orderPFamount
+            ];
+            return $arrDatavalidations;
+
+            curl_close($ch);
+        
+    }
+
+    
+    
     /**
      * Returns result code
      *
@@ -123,8 +160,8 @@ class PaguelofacilServices {
         if(!$this->hasCCLW($params)){
             throw new \InvalidArgumentException("Paguelofacil ProcessTx - CCLW is Required");
         }
-
-        $jsonData = (is_array($params) ? json_encode($params) : $params);
+        
+          $jsonData = (is_array($params) ? json_encode($params) : $params);
         $isSandbox = $forceSandbox !== null ? $forceSandbox : $this->sandbox;
         $serviceURL = ($isSandbox) ? self::SANDBOX_ENVIROMENT . self::PROCESS_TX . $this->getService() : $this->getFullUri();
 
@@ -166,6 +203,15 @@ class PaguelofacilServices {
         $params = http_build_query($params);
         $serviceURL = ($isSandbox) ? self::SANDBOX_ENVIROMENT . self::LINK_PAYMENT : self::PRODUCTION_ENVIROMENT . self::LINK_PAYMENT;
         $serviceURL = $serviceURL . "?". $params;
+        return $serviceURL;
+    }
+    
+    public function getPaymentTrxValid($param){
+
+        $urisearch = ($this->isSandbox); //? $forceSandbox : $this->sandbox;
+        $param = http_build_query($param);
+        $serviceURL = ($urisearch)? self::SANDBOX_ENVIROMENT . self::URICORE . self::TRXVALID : self::PRODUCTION_ENVIROMENT . self::URICORE . self::TRXVALID; 
+        $serviceURL = $serviceURL ."". $param;
         return $serviceURL;
     }
 }
