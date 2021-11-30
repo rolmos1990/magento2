@@ -107,7 +107,9 @@ class Processingtx extends \Magento\Framework\App\Action\Action
 
         $method = $order->getPayment()->getMethod();
         $methodInstance = $this->_paymentHelper->getMethodInstance($method);
-
+       
+        $validatedata = $this->ValidateTrxbyAPI($operCode);
+        
         if($estado == 'Pendiente'){
             /** Pending payments */
             $payment = $order->getPayment();
@@ -147,7 +149,7 @@ class Processingtx extends \Magento\Framework\App\Action\Action
             $this->_getCheckoutSession()->restoreQuote();
             $this->_redirect('checkout/cart');
             return;
-        } else {
+        } else if($estado == 'Aprobada')&&($validatedata['status']==1)&&($validatedata['amount']==$totalPagado) {
 
             $payment = $order->getPayment();
             $payment->setIsTransactionClosed(1);
